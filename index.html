@@ -1,1084 +1,564 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>致我的宝贝文文</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;600&family=ZCOOL+XiaoWei&display=swap');
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
-
-body {
-  font-family: 'Noto Serif SC', serif;
-  background: #0a0a1a;
-  color: #f0e6d3;
-  overflow-x: hidden;
-}
-
-/* ========== 粒子画布 ========== */
-#particles-canvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* ========== 加载/封面 ========== */
-.cover {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 30%, #4a1942 60%, #1a0a2e 100%);
-  z-index: 1;
-  overflow: hidden;
-}
-
-.cover::before {
-  content: '';
-  position: absolute;
-  width: 200%; height: 200%;
-  background: radial-gradient(ellipse at 30% 50%, rgba(255,100,150,0.15) 0%, transparent 50%),
-              radial-gradient(ellipse at 70% 30%, rgba(150,100,255,0.1) 0%, transparent 50%),
-              radial-gradient(ellipse at 50% 80%, rgba(255,180,100,0.08) 0%, transparent 50%);
-  animation: auroraMove 15s ease-in-out infinite;
-}
-
-@keyframes auroraMove {
-  0%, 100% { transform: translate(-10%, -10%) rotate(0deg); }
-  33% { transform: translate(5%, -5%) rotate(3deg); }
-  66% { transform: translate(-5%, 5%) rotate(-3deg); }
-}
-
-.cover-heart {
-  position: relative;
-  z-index: 2;
-  width: 120px; height: 120px;
-  margin-bottom: 40px;
-  animation: heartPulse 1.5s ease-in-out infinite;
-}
-
-.cover-heart svg {
-  width: 100%; height: 100%;
-  filter: drop-shadow(0 0 30px rgba(255,100,150,0.6));
-}
-
-@keyframes heartPulse {
-  0%, 100% { transform: scale(1); }
-  15% { transform: scale(1.15); }
-  30% { transform: scale(1); }
-  45% { transform: scale(1.1); }
-}
-
-.cover-title {
-  position: relative;
-  z-index: 2;
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 4rem;
-  background: linear-gradient(135deg, #ffb6c1, #ff69b4, #ffd700, #ffb6c1);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 4s ease-in-out infinite;
-  text-shadow: none;
-  opacity: 0;
-  animation: fadeInUp 2s 0.5s forwards, shimmer 4s 2.5s ease-in-out infinite;
-}
-
-.cover-subtitle {
-  position: relative;
-  z-index: 2;
-  font-family: 'ZCOOL XiaoWei', serif;
-  font-size: 1.3rem;
-  color: rgba(255,200,220,0.8);
-  margin-top: 15px;
-  letter-spacing: 8px;
-  opacity: 0;
-  animation: fadeInUp 2s 1.5s forwards;
-}
-
-.cover-enter {
-  position: relative;
-  z-index: 2;
-  margin-top: 60px;
-  padding: 15px 50px;
-  border: 2px solid rgba(255,182,193,0.6);
-  background: rgba(255,105,180,0.15);
-  color: #ffb6c1;
-  font-family: 'Noto Serif SC', serif;
-  font-size: 1.1rem;
-  letter-spacing: 5px;
-  cursor: pointer;
-  border-radius: 50px;
-  transition: all 0.5s;
-  opacity: 0;
-  animation: fadeInUp 2s 2.5s forwards;
-  backdrop-filter: blur(10px);
-}
-
-.cover-enter:hover {
-  background: rgba(255,105,180,0.35);
-  border-color: #ff69b4;
-  box-shadow: 0 0 30px rgba(255,105,180,0.4);
-  transform: scale(1.05);
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* ========== 主内容 ========== */
-.main-content {
-  display: none;
-  position: relative;
-  z-index: 1;
-}
-
-/* ========== 各段落区域 ========== */
-.section {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 20px;
-  overflow: hidden;
-}
-
-/* 不同段落不同背景 */
-.section-opening {
-  background: linear-gradient(180deg, #1a0a2e 0%, #2d1b4e 50%, #1f0f35 100%);
-}
-
-.section-confession {
-  background: linear-gradient(180deg, #1f0f35 0%, #2a1040 40%, #3d1550 100%);
-}
-
-.section-sakura {
-  background: linear-gradient(180deg, #3d1550 0%, #4a1942 30%, #5c2255 60%, #3d1550 100%);
-}
-
-.section-disney {
-  background: linear-gradient(180deg, #3d1550 0%, #1a1a4e 50%, #0f0f3d 100%);
-}
-
-.section-walks {
-  background: linear-gradient(180deg, #0f0f3d 0%, #1a2a3d 50%, #0f1f2f 100%);
-}
-
-.section-australia {
-  background: linear-gradient(180deg, #0f1f2f 0%, #1a3040 50%, #0f2535 100%);
-}
-
-.section-home {
-  background: linear-gradient(180deg, #0f2535 0%, #2d1b3e 50%, #1f0f30 100%);
-}
-
-.section-baby {
-  background: linear-gradient(180deg, #1f0f30 0%, #3d1942 50%, #2a1035 100%);
-}
-
-.section-apology {
-  background: linear-gradient(180deg, #2a1035 0%, #1a1a3e 50%, #0f0f2e 100%);
-}
-
-.section-missing {
-  background: linear-gradient(180deg, #0f0f2e 0%, #2d1040 50%, #1f0a30 100%);
-}
-
-.section-future {
-  background: linear-gradient(180deg, #1f0a30 0%, #4a1942 30%, #2d1b4e 60%, #1a0a2e 100%);
-}
-
-/* ========== 段落装饰光效 ========== */
-.section::before {
-  content: '';
-  position: absolute;
-  width: 600px; height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,105,180,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.section:nth-child(odd)::before {
-  left: -200px; top: 50%;
-  transform: translateY(-50%);
-}
-
-.section:nth-child(even)::before {
-  right: -200px; top: 50%;
-  transform: translateY(-50%);
-}
-
-/* ========== 内容卡片 ========== */
-.card {
-  max-width: 700px;
-  width: 100%;
-  position: relative;
-  z-index: 2;
-  opacity: 0;
-  transform: translateY(60px);
-  transition: opacity 1.2s cubic-bezier(0.25,0.46,0.45,0.94),
-              transform 1.2s cubic-bezier(0.25,0.46,0.45,0.94);
-}
-
-.card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.card-inner {
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,182,193,0.15);
-  border-radius: 20px;
-  padding: 50px 45px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3),
-              inset 0 1px 0 rgba(255,255,255,0.05);
-}
-
-.card-icon {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 3rem;
-  opacity: 0.9;
-}
-
-.card-title {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 2.2rem;
-  text-align: center;
-  margin-bottom: 30px;
-  background: linear-gradient(135deg, #ffb6c1, #ff69b4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.card-text {
-  font-size: 1.05rem;
-  line-height: 2.2;
-  color: rgba(240,230,211,0.9);
-  text-align: justify;
-  letter-spacing: 0.5px;
-}
-
-.card-text .highlight {
-  color: #ffb6c1;
-  font-weight: 600;
-}
-
-/* ========== 时间线 ========== */
-.timeline {
-  position: relative;
-  max-width: 800px;
-  width: 100%;
-  z-index: 2;
-}
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0; bottom: 0;
-  width: 2px;
-  background: linear-gradient(180deg, transparent, rgba(255,182,193,0.4), transparent);
-  transform: translateX(-50%);
-}
-
-.timeline-item {
-  position: relative;
-  width: 45%;
-  opacity: 0;
-  transform: translateX(-30px);
-  transition: all 1s cubic-bezier(0.25,0.46,0.45,0.94);
-}
-
-.timeline-item:nth-child(odd) {
-  margin-left: 5%;
-}
-
-.timeline-item:nth-child(even) {
-  margin-left: 50%;
-  transform: translateX(30px);
-}
-
-.timeline-item.visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.timeline-item + .timeline-item {
-  margin-top: 40px;
-}
-
-.timeline-dot {
-  position: absolute;
-  width: 16px; height: 16px;
-  background: #ff69b4;
-  border-radius: 50%;
-  top: 20px;
-  box-shadow: 0 0 20px rgba(255,105,180,0.5);
-}
-
-.timeline-item:nth-child(odd) .timeline-dot {
-  right: -8%;
-  transform: translateX(50%);
-}
-
-.timeline-item:nth-child(even) .timeline-dot {
-  left: -8%;
-  transform: translateX(-50%);
-}
-
-.timeline-card {
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255,182,193,0.12);
-  border-radius: 15px;
-  padding: 25px 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-.timeline-title {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 1.5rem;
-  color: #ffb6c1;
-  margin-bottom: 10px;
-}
-
-.timeline-text {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: rgba(240,230,211,0.85);
-}
-
-/* ========== 最终大段 ========== */
-.finale {
-  position: relative;
-  z-index: 2;
-  max-width: 700px;
-  width: 100%;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(60px) scale(0.95);
-  transition: all 1.5s cubic-bezier(0.25,0.46,0.45,0.94);
-}
-
-.finale.visible {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-.finale-text {
-  font-size: 1.1rem;
-  line-height: 2.4;
-  color: rgba(240,230,211,0.9);
-  text-align: justify;
-  margin-bottom: 50px;
-}
-
-.finale-sign {
-  font-family: 'Ma Shan Zheng', cursive;
-  font-size: 2.5rem;
-  background: linear-gradient(135deg, #ffd700, #ff69b4, #ffd700);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-.finale-hearts {
-  margin-top: 40px;
-  font-size: 2rem;
-  animation: heartPulse 1.5s ease-in-out infinite;
-}
-
-/* ========== 浮动装饰 ========== */
-.floating-deco {
-  position: fixed;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ========== 花瓣下落 ========== */
-.petal {
-  position: fixed;
-  pointer-events: none;
-  z-index: 3;
-  opacity: 0;
-}
-
-/* ========== 音乐控制按钮 ========== */
-.music-btn {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px; height: 50px;
-  border-radius: 50%;
-  background: rgba(255,105,180,0.2);
-  border: 2px solid rgba(255,182,193,0.4);
-  color: #ffb6c1;
-  font-size: 1.3rem;
-  cursor: pointer;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s;
-}
-
-.music-btn:hover {
-  background: rgba(255,105,180,0.4);
-  transform: scale(1.1);
-}
-
-.music-btn.playing {
-  animation: musicPulse 2s ease-in-out infinite;
-}
-
-@keyframes musicPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,105,180,0.3); }
-  50% { box-shadow: 0 0 0 15px rgba(255,105,180,0); }
-}
-
-/* ========== 进度条 ========== */
-.progress-bar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #ff69b4, #ffd700, #ff69b4);
-  background-size: 200% 100%;
-  animation: shimmer 3s ease-in-out infinite;
-  z-index: 100;
-  transition: width 0.1s;
-}
-
-/* ========== 自动滚动提示 ========== */
-.scroll-hint {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 50;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-
-.scroll-hint.show { opacity: 1; }
-
-.scroll-hint-text {
-  font-size: 0.8rem;
-  color: rgba(255,182,193,0.6);
-  letter-spacing: 3px;
-}
-
-.scroll-arrow {
-  width: 20px; height: 20px;
-  border-right: 2px solid rgba(255,182,193,0.5);
-  border-bottom: 2px solid rgba(255,182,193,0.5);
-  transform: rotate(45deg);
-  animation: scrollArrow 2s ease-in-out infinite;
-}
-
-@keyframes scrollArrow {
-  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.5; }
-  50% { transform: rotate(45deg) translate(5px, 5px); opacity: 1; }
-}
-
-/* ========== 星星闪烁背景 ========== */
-.stars {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  animation: twinkle var(--duration) ease-in-out infinite;
-  animation-delay: var(--delay);
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.3); }
-}
-
-/* ========== 响应式 ========== */
-@media (max-width: 768px) {
-  .cover-title { font-size: 2.5rem; }
-  .cover-subtitle { font-size: 1rem; letter-spacing: 4px; }
-  .card-inner { padding: 30px 25px; }
-  .card-title { font-size: 1.8rem; }
-  .card-text { font-size: 0.95rem; line-height: 2; }
-  .timeline::before { left: 20px; }
-  .timeline-item,
-  .timeline-item:nth-child(odd),
-  .timeline-item:nth-child(even) {
-    width: calc(100% - 50px);
-    margin-left: 50px;
-    transform: translateX(30px);
-  }
-  .timeline-item.visible { transform: translateX(0); }
-  .timeline-item:nth-child(odd) .timeline-dot,
-  .timeline-item:nth-child(even) .timeline-dot {
-    left: -38px;
-    right: auto;
-    transform: none;
-  }
-  .finale-sign { font-size: 2rem; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>致我的宝贝文文 - 永远爱你的老公</title>
+    <!-- 引入 Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- 引入 Lucide 图标 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- 引入 Canvas Confetti 撒花效果 -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Serif SC', serif;
+            scroll-behavior: smooth;
+            letter-spacing: 0;
+            color: #1f2937;
+        }
+        .font-handwriting {
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+        /* 滚动渐显动画 */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.2s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* 首屏信件折叠/展开效果 */
+        .envelope {
+            perspective: 1000px;
+            transition: all 1.2s ease-in-out;
+        }
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+        .envelope.open .letter {
+            transform: translateY(-80px);
+            z-index: 10;
+        }
+        /* 音乐唱片旋转效果 */
+        @keyframes rotate-vinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .spinning {
+            animation: rotate-vinyl 12s linear infinite;
+        }
+        /* 自定义遮罩层动画 */
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-stone-50 overflow-x-hidden selection:bg-rose-200 selection:text-rose-900">
 
-<!-- 星空背景 -->
-<div class="stars" id="stars"></div>
+    <!-- 1. 背景画布 (Canvas) -->
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0"></canvas>
 
-<!-- 粒子画布 -->
-<canvas id="particles-canvas"></canvas>
+    <!-- 2. 背景音乐音频源 -->
+    <!-- 提示：如果需要换成你自己的本地MP3音乐，只需把src里的链接替换为你的音乐路径（例如：music.mp3） -->
+    <audio id="bg-music" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
+        <source src="https://music.163.com/song/media/outer/url?id=139774.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        你的浏览器不支持播放背景音乐，请使用现代浏览器。
+    </audio>
 
-<!-- 进度条 -->
-<div class="progress-bar" id="progress-bar"></div>
-
-<!-- ========== 封面 ========== -->
-<div class="cover" id="cover">
-  <div class="cover-heart">
-    <svg viewBox="0 0 100 100">
-      <defs>
-        <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#ff69b4"/>
-          <stop offset="50%" style="stop-color:#ff1493"/>
-          <stop offset="100%" style="stop-color:#ff69b4"/>
-        </linearGradient>
-      </defs>
-      <path d="M50 88 C25 65, 0 45, 0 28 C0 12, 12 0, 28 0 C38 0, 46 6, 50 14 C54 6, 62 0, 72 0 C88 0, 100 12, 100 28 C100 45, 75 65, 50 88Z"
-            fill="url(#heartGrad)"/>
-    </svg>
-  </div>
-  <h1 class="cover-title">致我的宝贝文文</h1>
-  <p class="cover-subtitle">一封迟来的情书</p>
-  <button class="cover-enter" id="enterBtn" onclick="enterSite()">打 开 情 书</button>
-</div>
-
-<!-- ========== 主内容 ========== -->
-<div class="main-content" id="mainContent">
-
-  <!-- 开篇 -->
-  <section class="section section-opening">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">💌</div>
-        <div class="card-title">好久没有给你写情书了</div>
-        <div class="card-text">
-          今天想把这段日子积攒在心里的想念和心意，慢慢说给你听。<br><br>
-          回想我们一路走来，心里全是<span class="highlight">温柔和庆幸</span>。
+    <!-- 3. 右上角音乐控制浮窗 -->
+    <button id="music-control" class="fixed top-6 right-6 z-40 bg-white/80 backdrop-blur-md border border-rose-100 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 pointer-events-auto hidden group" title="播放/暂停音乐">
+        <div class="relative w-6 h-6 flex items-center justify-center">
+            <i id="music-icon" data-lucide="music" class="w-5 h-5 text-rose-500 transition-all duration-300"></i>
+            <!-- 唱片中心圆点装饰 -->
+            <span class="absolute w-1.5 h-1.5 bg-rose-200 rounded-full"></span>
         </div>
-      </div>
+    </button>
+
+    <!-- 4. 信封开场遮罩层 -->
+    <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-stone-900/60 backdrop-blur-lg px-4 transition-all duration-1000">
+        <div class="text-center mb-8 transform translate-y-0 transition duration-1000">
+            <h2 class="font-handwriting text-5xl md:text-6xl text-white mb-2 tracking-wide drop-shadow-md">致我的宝贝文文</h2>
+            <p class="text-rose-200 text-sm md:text-base tracking-widest uppercase">一封珍藏在你我时光中的秘密来信</p>
+        </div>
+        
+        <!-- 信封主体 -->
+        <div id="envelope-box" class="envelope relative w-80 h-52 md:w-96 md:h-60 bg-rose-50 rounded-lg shadow-2xl flex items-center justify-center cursor-pointer border border-rose-100/30 overflow-visible transition-all duration-700 hover:scale-[1.02]">
+            <!-- 信封后背三角 (下部叠加层) -->
+            <div class="absolute inset-0 bg-gradient-to-t from-rose-100 via-rose-50/80 to-transparent rounded-lg pointer-events-none z-10"></div>
+            
+            <!-- 信折页盖 (上三角) -->
+            <div class="flap absolute top-0 left-0 right-0 h-1/2 bg-rose-100 rounded-t-lg origin-top transition-transform duration-700 ease-in-out shadow-md z-30" style="clip-path: polygon(0 0, 100% 0, 50% 100%);"></div>
+            
+            <!-- 内部露出的信件信纸 -->
+            <div class="letter absolute w-[90%] h-[85%] bg-white rounded shadow-inner flex flex-col items-center justify-center p-4 transition-transform duration-700 ease-in-out z-0">
+                <p class="font-handwriting text-2xl text-rose-600">我一直在想你</p>
+                <span class="text-xs text-stone-400 mt-2">Welcome Home</span>
+            </div>
+            
+            <!-- 信封前侧折叠边 (左三角和右三角拼接) -->
+            <div class="absolute inset-0 pointer-events-none z-20" style="clip-path: polygon(0 100%, 0 0, 50% 50%, 100% 0, 100% 100%); background: linear-gradient(135deg, rgba(254, 244, 244, 0.9) 0%, rgba(253, 224, 224, 0.7) 100%);"></div>
+
+            <!-- 火漆蜡印 (开启按钮) -->
+            <button id="open-btn" class="absolute z-40 w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 active:scale-95 transition-all duration-200" style="top: calc(50% - 2rem); left: calc(50% - 2rem);">
+                <i data-lucide="heart" class="w-8 h-8 text-white fill-white animate-pulse"></i>
+            </button>
+        </div>
+        
+        <div class="mt-8 text-stone-300 text-xs md:text-sm tracking-widest text-center">
+            <p class="animate-bounce">点击爱心拆封信件，开启属于你的惊喜</p>
+        </div>
     </div>
-  </section>
 
-  <!-- 表白 -->
-  <section class="section section-confession">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">🎢</div>
-        <div class="card-title">欢乐谷的那一天</div>
-        <div class="card-text">
-          最初在欢乐谷，我鼓起勇气向你表白，那天你穿着JK，<span class="highlight">活泼又美好</span>，一下子就住进了我心里。<br><br>
-          我一直很喜欢你鲜活的样子，喜欢听你叽叽喳喳说不完的小事，你的热闹、你的可爱，填满了我所有平淡的日子，也是我最贪恋的<span class="highlight">小确幸</span>。
-        </div>
-      </div>
-    </div>
-  </section>
+    <!-- 5. 网页主体故事流 -->
+    <main id="main-content" class="relative z-10 w-full min-h-screen opacity-0 transition-opacity duration-1000">
+        
+        <!-- 首屏：温柔的相遇 (致文文) -->
+        <section id="hero" class="min-h-screen flex flex-col justify-center items-center px-6 relative py-20 bg-gradient-to-b from-rose-50/60 to-pink-50/40">
+            <div class="max-w-4xl text-center z-10">
+                <!-- 精致的心形框图 -->
+                <div class="mb-8 inline-block animate-pulse">
+                    <div class="w-16 h-16 rounded-full bg-rose-500/10 flex items-center justify-center border border-rose-500/20">
+                        <i data-lucide="heart" class="w-8 h-8 text-rose-500 fill-rose-500"></i>
+                    </div>
+                </div>
+                <h1 class="font-handwriting text-5xl md:text-7xl text-rose-600 mb-6 tracking-wide">致我的宝贝文文：</h1>
+                <div class="space-y-6 text-stone-700 text-base md:text-lg leading-relaxed max-w-2xl mx-auto font-serif">
+                    <p class="first-letter:text-3xl first-letter:font-bold first-letter:text-rose-500 first-letter:float-left first-letter:mr-2">好久没有给你写情书了。</p>
+                    <p>今天想把这段日子积攒在心里的想念和心意，慢慢说给你听。</p>
+                    <p class="italic text-stone-500 text-sm mt-4">往下滑动，翻开我们的时光卷轴...</p>
+                </div>
+            </div>
+            
+            <!-- 滑动引导 -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-rose-400 text-sm">
+                <span class="mb-2 tracking-widest text-xs">SCROLL</span>
+                <i data-lucide="chevron-down" class="w-5 h-5 animate-bounce"></i>
+            </div>
+        </section>
 
-  <!-- 樱花 -->
-  <section class="section section-sakura">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">🌸</div>
-        <div class="card-title">漫天樱花下的并肩</div>
-        <div class="card-text">
-          和你在一起之后，我看过最美的风景，都是因为在你身边。<br><br>
-          看过<span class="highlight">漫天飘落的樱花</span>，在树下和你并肩合影，你灵动可爱的模样，我一直记在心底。
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- 第一章：执手相恋 (初见欢乐谷) -->
+        <section class="py-24 px-6 bg-white border-y border-stone-100">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="scroll-reveal space-y-6">
+                    <div class="flex items-center space-x-3 text-rose-500">
+                        <i data-lucide="ticket" class="w-6 h-6"></i>
+                        <span class="text-xs tracking-widest uppercase font-bold text-rose-400">Chapter 01</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-stone-800 leading-tight">心动初见，欢乐谷的勇气</h2>
+                    <div class="h-1 w-20 bg-rose-500 rounded"></div>
+                    <div class="text-stone-600 space-y-4 leading-relaxed font-serif">
+                        <p>回想我们一路走来，心里全是温柔和庆幸。最初在 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">欢乐谷</strong>，我鼓起勇气向你表白，那天你穿着 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">JK</strong>，活泼又美好，一下子就住进了我心里。</p>
+                        <p>我一直很喜欢你鲜活的样子，喜欢听你叽叽喳喳说不完的小事，你的热闹、你的可爱，填满了我所有平淡的日子，也是我最贪恋的小确幸。</p>
+                    </div>
+                </div>
+                <!-- 插画框：使用精美拼贴式水粉感边框装饰的意境插图 -->
+                <div class="scroll-reveal flex justify-center">
+                    <div class="relative w-80 h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-rose-50/50 p-2 bg-gradient-to-tr from-rose-100 to-pink-50 flex items-center justify-center">
+                        <div class="text-center p-6 space-y-4">
+                            <i data-lucide="sparkles" class="w-12 h-12 text-rose-400 mx-auto animate-spin" style="animation-duration: 6s;"></i>
+                            <p class="font-handwriting text-2xl text-rose-600">欢乐谷的表白</p>
+                            <p class="text-xs text-stone-400 leading-relaxed font-sans">“那天你穿着JK，活泼又美好，一下子就住进了我心里。”</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- 迪士尼时间线 -->
-  <section class="section section-disney">
-    <div class="timeline">
-      <div class="timeline-item" data-reveal>
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-title">🏰 冬日迪士尼</div>
-          <div class="timeline-text">
-            一起在冷风里逛过迪士尼，哪怕天寒风冷，你依旧<span class="highlight">乖巧可人</span>，安静陪着我散步。
-          </div>
-        </div>
-      </div>
-      <div class="timeline-item" data-reveal>
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-title">🗼 东京迪士尼</div>
-          <div class="timeline-text">
-            也在东京迪士尼游船之上，感受过微风拂面，那时的你<span class="highlight">温婉动人，恬静又治愈</span>。
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- 第二章：樱花与雪影 (迪士尼与漫行) -->
+        <section class="py-24 px-6 bg-gradient-to-b from-stone-50/50 to-pink-50/20">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- 意境插图 -->
+                <div class="scroll-reveal order-2 md:order-1 flex justify-center">
+                    <div class="relative w-80 h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-rose-50/50 p-2 bg-gradient-to-tr from-pink-100 to-rose-50 flex items-center justify-center">
+                        <div class="text-center p-6 space-y-4">
+                            <div class="flex justify-center space-x-2">
+                                <i data-lucide="flower" class="w-10 h-10 text-pink-400"></i>
+                                <i data-lucide="snowflake" class="w-10 h-10 text-sky-300"></i>
+                            </div>
+                            <p class="font-handwriting text-2xl text-rose-600">并肩看过的风景</p>
+                            <p class="text-xs text-stone-400 leading-relaxed font-sans">从漫天飞舞的樱花，到寒风凛冽的迪士尼游船，身边的温暖驱散了一切寒冷。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-reveal order-1 md:order-2 space-y-6">
+                    <div class="flex items-center space-x-3 text-rose-500">
+                        <i data-lucide="compass" class="w-6 h-6"></i>
+                        <span class="text-xs tracking-widest uppercase font-bold text-rose-400">Chapter 02</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-stone-800 leading-tight">看过最美的风景，是在你身边</h2>
+                    <div class="h-1 w-20 bg-rose-500 rounded"></div>
+                    <div class="text-stone-600 space-y-4 leading-relaxed font-serif">
+                        <p>和你在一起之后，我看过最美的风景，都是因为在你身边。看过漫天飘落的 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">樱花</strong>，在树下和你并肩合影，你灵动可爱的模样，我一直记在心底。</p>
+                        <p>也一起在冷风里逛过 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">迪士尼</strong>，哪怕天寒风冷，你依旧乖巧可人，安静陪着我散步；也在 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">东京迪士尼游船</strong> 之上，感受过微风拂面，那时的你温婉动人，恬静又治愈。</p>
+                        <p>闲暇的时候，我们也常常慢慢散步。在 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">广富林</strong>、在 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">辰山植物园</strong>，不用赶路，不用刻意安排，只是简简单单陪着彼此、吹吹风、聊聊天。和你在一起的每一段闲散时光，都安稳、治愈，是我最珍惜的日常。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- 散步时光 -->
-  <section class="section section-walks">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">🍃</div>
-        <div class="card-title">最简单的幸福</div>
-        <div class="card-text">
-          闲暇的时候，我们也常常慢慢散步。在广富林、在辰山植物园，不用赶路，不用刻意安排，只是简简单单陪着彼此、吹吹风、聊聊天。<br><br>
-          和你在一起的每一段闲散时光，都<span class="highlight">安稳、治愈</span>，是我最珍惜的日常。
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- 第三章：远方的浪漫 (蜜月澳洲) -->
+        <section class="py-24 px-6 bg-white border-y border-stone-100">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="scroll-reveal space-y-6">
+                    <div class="flex items-center space-x-3 text-rose-500">
+                        <i data-lucide="plane" class="w-6 h-6"></i>
+                        <span class="text-xs tracking-widest uppercase font-bold text-rose-400">Chapter 03</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-stone-800 leading-tight">远赴澳洲，属于我们的蜜月</h2>
+                    <div class="h-1 w-20 bg-rose-500 rounded"></div>
+                    <div class="text-stone-600 space-y-4 leading-relaxed font-serif">
+                        <p>我们还一起远赴 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">澳洲</strong> 度过蜜月，看过 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">凯恩斯</strong> 清澈的海水（虽然我被鲨鱼吓到了，宝宝还感冒了），看过 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">墨尔本</strong> 各种各样的小动物，走过 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">悉尼</strong> 温柔的山海与动物园风光。</p>
+                        <p class="font-semibold text-rose-400">所有远行的浪漫，因为是和你一起，才变得格外珍贵。</p>
+                    </div>
+                </div>
+                <!-- 趣味插图框 -->
+                <div class="scroll-reveal flex justify-center">
+                    <div class="relative w-80 h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-rose-50/50 p-2 bg-gradient-to-tr from-sky-100 to-pink-50 flex items-center justify-center">
+                        <div class="text-center p-6 space-y-4">
+                            <i data-lucide="shrub" class="w-12 h-12 text-emerald-400 mx-auto"></i>
+                            <p class="font-handwriting text-2xl text-rose-600">远行的回忆</p>
+                            <p class="text-xs text-stone-400 leading-relaxed font-sans">凯恩斯的清澈海水，墨尔本的萌动生灵，悉尼温柔的夕阳。我们把脚步留在大洋彼岸。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- 澳洲蜜月 -->
-  <section class="section section-australia">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">✈️</div>
-        <div class="card-title">远赴澳洲的蜜月</div>
-        <div class="card-text">
-          我们还一起远赴澳洲度过蜜月，看过凯恩斯清澈的海水<span class="highlight">（虽然我被鲨鱼吓到了，宝宝还感冒了）</span>，看过墨尔本各种各样的小动物，走过悉尼温柔的山海与动物园风光。<br><br>
-          所有远行的浪漫，因为是和你一起，才变得<span class="highlight">格外珍贵</span>。
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- 第四章：爱的小家 (日常温暖与团团) -->
+        <section class="py-24 px-6 bg-gradient-to-b from-stone-50/50 to-pink-50/10">
+            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- 意境插图 -->
+                <div class="scroll-reveal order-2 md:order-1 flex justify-center">
+                    <div class="relative w-80 h-80 rounded-2xl overflow-hidden shadow-2xl border-4 border-rose-50/50 p-2 bg-gradient-to-tr from-rose-100 to-pink-100 flex items-center justify-center">
+                        <div class="text-center p-6 space-y-4">
+                            <i data-lucide="home" class="w-12 h-12 text-rose-400 mx-auto"></i>
+                            <p class="font-handwriting text-2xl text-rose-600">避风的港湾</p>
+                            <p class="text-xs text-stone-400 leading-relaxed font-sans">在这个属于我们的小家里，处处有着温暖烟火，有了你，我的疲惫都会消融在拥抱中。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-reveal order-1 md:order-2 space-y-6">
+                    <div class="flex items-center space-x-3 text-rose-500">
+                        <i data-lucide="baby" class="w-6 h-6"></i>
+                        <span class="text-xs tracking-widest uppercase font-bold text-rose-400">Chapter 04</span>
+                    </div>
+                    <h2 class="text-3xl font-bold text-stone-800 leading-tight">温馨小家，勇敢的母亲</h2>
+                    <div class="h-1 w-20 bg-rose-500 rounded"></div>
+                    <div class="text-stone-600 space-y-4 leading-relaxed font-serif">
+                        <p>我最眷恋的，还是和你在这个小家的每一天。你总是温柔细致，把家里打理得干干净净，把琐碎的生活收拾得整整齐齐。因为有你，处处都是烟火暖意。</p>
+                        <p>我最喜欢夜里抱着你的时刻，只要怀里是你，所有浮躁和疲惫都会安静下来，心底无比踏实、安稳，这是任何人都替代不了的安心。</p>
+                        <p>后来你孕育属于我们的小生命，为了守护宝宝，我们慢慢收敛了所有远行的热闹，安安静静期待未来。直到 <strong class="text-rose-500 font-semibold border-b border-rose-200 pb-0.5">团团</strong> 平安降临，我亲眼看着你熬过所有辛苦、疼痛与煎熬，才更加懂得你有多勇敢，也更加心疼你、珍惜你。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- 小家的日常 -->
-  <section class="section section-home">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">🏠</div>
-        <div class="card-title">我最眷恋的小家</div>
-        <div class="card-text">
-          我最眷恋的，还是和你在这个小家的每一天。你总是温柔细致，把家里打理得干干净净，把琐碎的生活收拾得整整齐齐。因为有你，处处都是<span class="highlight">烟火暖意</span>。<br><br>
-          我最喜欢夜里抱着你的时刻，只要怀里是你，所有浮躁和疲惫都会安静下来，心底无比<span class="highlight">踏实、安稳</span>，这是任何人都替代不了的安心。
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- 第五章：真挚的告白 (致我最爱的你) -->
+        <section class="py-24 px-6 bg-white border-y border-stone-100">
+            <div class="max-w-4xl mx-auto space-y-12">
+                <div class="scroll-reveal text-center space-y-6">
+                    <div class="flex justify-center items-center space-x-3 text-rose-500">
+                        <i data-lucide="award" class="w-6 h-6"></i>
+                        <span class="text-xs tracking-widest uppercase font-bold text-rose-400">Chapter 05</span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-stone-800">往后余生，把所有的温柔只给你</h2>
+                    <div class="h-1 w-24 bg-rose-500 mx-auto rounded"></div>
+                </div>
+                
+                <div class="scroll-reveal bg-rose-50/40 border border-rose-100 p-8 md:p-12 rounded-3xl space-y-6 text-stone-700 text-base md:text-lg leading-relaxed font-serif shadow-sm">
+                    <p>月子里那次争执，是我不够成熟、处事笨拙，没能稳住情绪，让最该被我疼爱的你受了委屈。我一直心怀愧疚，也认真反省。好在宝宝大度，我们很快和好如初。</p>
+                    <p>如今你休养满 <strong class="text-rose-500 font-bold">四十二天</strong>，我满心期待，好接你回家。分开的这段日子，我格外想念你。想念所有和你看过的风景，想念家里温馨的烟火，想念夜里安稳的拥抱，更想念一直鲜活可爱、纯真善良的你。</p>
+                    <p class="text-lg md:text-xl font-bold text-rose-600 border-l-4 border-rose-400 pl-4 py-2 bg-rose-50/80 rounded-r-lg">你首先是我此生最偏爱、最想守护的文文，其次才是团团的妈妈。</p>
+                    <p>往后余生，我会更沉稳、更温柔，好好沟通、好好包容，再也不让你独自委屈、独自难过。未来漫长的日子，我想继续陪着你，看更多风景、过更多朝夕，把所有温柔和偏爱，都只给你一个人。</p>
+                    <p class="font-handwriting text-4xl text-rose-600 text-center pt-8">欢迎回家，我最爱的宝宝。</p>
+                </div>
+            </div>
+        </section>
 
-  <!-- 团团降临 -->
-  <section class="section section-baby">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">👶</div>
-        <div class="card-title">团团平安降临</div>
-        <div class="card-text">
-          后来你孕育属于我们的小生命，为了守护宝宝，我们慢慢收敛了所有远行的热闹，安安静静期待未来。<br><br>
-          直到团团平安降临，我亲眼看着你熬过所有辛苦、疼痛与煎熬，才更加懂得你有多<span class="highlight">勇敢</span>，也更加<span class="highlight">心疼你、珍惜你</span>。
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- 时光计时器与落款 -->
+        <section id="timer-section" class="py-24 px-6 bg-gradient-to-t from-rose-50/50 to-white flex flex-col items-center justify-center text-center">
+            <div class="scroll-reveal max-w-md w-full space-y-8 bg-white border border-rose-100/60 p-8 rounded-3xl shadow-xl z-10 relative">
+                <!-- 心形跳动粒子 -->
+                <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 w-20 h-20 bg-rose-500 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                    <i data-lucide="heart" class="w-10 h-10 text-white fill-white animate-ping absolute opacity-75"></i>
+                    <i data-lucide="heart" class="w-10 h-10 text-white fill-white relative z-10"></i>
+                </div>
+                
+                <div class="pt-8">
+                    <p class="text-stone-500 text-sm tracking-widest font-sans">我们相伴的温柔时光</p>
+                    <h3 class="font-handwriting text-3xl text-rose-600 mt-2">文文 & 老公</h3>
+                </div>
 
-  <!-- 道歉 -->
-  <section class="section section-apology">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">🤝</div>
-        <div class="card-title">我心里的愧疚</div>
-        <div class="card-text">
-          月子里那次争执，是我不够成熟、处事笨拙，没能稳住情绪，让最该被我疼爱的你受了委屈。我一直心怀愧疚，也认真反省。<br><br>
-          好在宝宝大度，我们很快<span class="highlight">和好如初</span>。
-        </div>
-      </div>
-    </div>
-  </section>
+                <!-- 倒计时数字网格 -->
+                <div class="grid grid-cols-4 gap-2 text-stone-800 font-mono font-bold">
+                    <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100/40">
+                        <span id="days" class="text-2xl md:text-3xl text-rose-500">0000</span>
+                        <p class="text-[10px] text-stone-400 font-sans font-normal mt-1">天</p>
+                    </div>
+                    <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100/40">
+                        <span id="hours" class="text-2xl md:text-3xl text-rose-500">00</span>
+                        <p class="text-[10px] text-stone-400 font-sans font-normal mt-1">时</p>
+                    </div>
+                    <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100/40">
+                        <span id="minutes" class="text-2xl md:text-3xl text-rose-500">00</span>
+                        <p class="text-[10px] text-stone-400 font-sans font-normal mt-1">分</p>
+                    </div>
+                    <div class="bg-rose-50/50 p-3 rounded-xl border border-rose-100/40">
+                        <span id="seconds" class="text-2xl md:text-3xl text-rose-500">00</span>
+                        <p class="text-[10px] text-stone-400 font-sans font-normal mt-1">秒</p>
+                    </div>
+                </div>
+                
+                <p class="text-xs text-stone-400 font-sans">爱意在岁月中流转，指针从未停息</p>
+            </div>
 
-  <!-- 想念 -->
-  <section class="section section-missing">
-    <div class="card" data-reveal>
-      <div class="card-inner">
-        <div class="card-icon">💭</div>
-        <div class="card-title">格外想念你</div>
-        <div class="card-text">
-          如今你休养满四十二天，我满心期待，好接你回家。分开的这段日子，我格外想念你。<br><br>
-          想念所有和你看过的风景，想念家里温馨的烟火，想念夜里安稳的拥抱，更想念一直<span class="highlight">鲜活可爱、纯真善良</span>的你。<br><br>
-          你首先是我此生最偏爱、最想守护的<span class="highlight">文文</span>，其次才是团团的妈妈。
-        </div>
-      </div>
-    </div>
-  </section>
+            <!-- 最终落款 -->
+            <div class="scroll-reveal mt-20 text-center space-y-4">
+                <p class="font-handwriting text-3xl text-stone-700">永远爱你的老公</p>
+                <p class="text-stone-400 font-mono text-xs tracking-widest uppercase">2026年 7月10日 · 呈献</p>
+            </div>
+        </section>
 
-  <!-- 往后余生 -->
-  <section class="section section-future">
-    <div class="finale" data-reveal>
-      <div class="card-inner" style="border-color: rgba(255,215,0,0.2); background: rgba(255,255,255,0.06);">
-        <div class="card-icon" style="font-size: 4rem;">💕</div>
-        <div class="card-title" style="font-size: 2.8rem; margin-bottom: 40px;">往后余生</div>
-        <div class="finale-text">
-          往后余生，我会更沉稳、更温柔，好好沟通、好好包容，再也不让你独自委屈、独自难过。<br><br>
-          未来漫长的日子，我想继续陪着你，看更多风景、过更多朝夕，把所有温柔和偏爱，都只给你一个人。<br><br>
-          <span class="highlight" style="font-size: 1.3rem;">欢迎回家，我最爱的宝宝。</span>
-        </div>
-        <div class="finale-sign">永远爱你的老公</div>
-        <div class="finale-hearts">❤️ ❤️ ❤️</div>
-      </div>
-    </div>
-  </section>
+    </main>
 
-</div>
+    <!-- 6. JavaScript 交互核心逻辑 -->
+    <script>
+        // 初始化 Lucide 图标
+        lucide.createIcons();
 
-<!-- 音乐控制 -->
-<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="背景音乐">
-  ♪
-</button>
+        // 音频与信封逻辑
+        const bgMusic = document.getElementById('bg-music');
+        const openBtn = document.getElementById('open-btn');
+        const envelopeBox = document.getElementById('envelope-box');
+        const splashScreen = document.getElementById('splash-screen');
+        const mainContent = document.getElementById('main-content');
+        const musicControl = document.getElementById('music-control');
+        const musicIcon = document.getElementById('music-icon');
 
-<!-- 滚动提示 -->
-<div class="scroll-hint" id="scrollHint">
-  <div class="scroll-arrow"></div>
-  <div class="scroll-hint-text">缓缓向下</div>
-</div>
+        let isMusicPlaying = false;
 
-<!-- 背景音乐 (使用Web Audio合成柔和旋律) -->
+        // 拆封情书点击事件
+        openBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止冒泡
+            
+            // 触发信封展开动画
+            envelopeBox.classList.add('open');
+            
+            // 撒一波爱心碎纸屑
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#f43f5e', '#ec4899', '#f472b6', '#fda4af']
+            });
 
-<script>
-// ========== 星空生成 ==========
-(function createStars() {
-  const container = document.getElementById('stars');
-  for (let i = 0; i < 100; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    const size = Math.random() * 2.5 + 0.5;
-    star.style.cssText = `
-      width: ${size}px; height: ${size}px;
-      left: ${Math.random() * 100}%;
-      top: ${Math.random() * 100}%;
-      --duration: ${2 + Math.random() * 4}s;
-      --delay: ${Math.random() * 4}s;
-    `;
-    container.appendChild(star);
-  }
-})();
+            // 尝试播放背景音乐
+            bgMusic.play().then(() => {
+                isMusicPlaying = true;
+                musicControl.classList.remove('hidden');
+                musicControl.querySelector('div').classList.add('spinning');
+                musicIcon.setAttribute('data-lucide', 'music');
+                lucide.createIcons();
+            }).catch((err) => {
+                console.log("音频被浏览器限制阻拦，点击控件将可以播放: ", err);
+                // 即使音频未成功播放，也显示控件，允许后续点击触发
+                musicControl.classList.remove('hidden');
+            });
 
-// ========== 心形粒子 ==========
-const canvas = document.getElementById('particles-canvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
-let animationStarted = false;
+            // 1.5秒后渐变淡出首屏，显示主要内容
+            setTimeout(() => {
+                splashScreen.classList.add('fade-out');
+                mainContent.classList.remove('opacity-0');
+                
+                // 触发落字与卡片首屏呈现
+                setTimeout(() => {
+                    splashScreen.style.display = 'none';
+                }, 1500);
+            }, 1500);
+        });
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+        // 音乐控制按钮点击事件
+        musicControl.addEventListener('click', function() {
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                musicControl.querySelector('div').classList.remove('spinning');
+                musicIcon.setAttribute('data-lucide', 'music-2');
+                isMusicPlaying = false;
+            } else {
+                bgMusic.play();
+                musicControl.querySelector('div').classList.add('spinning');
+                musicIcon.setAttribute('data-lucide', 'music');
+                isMusicPlaying = true;
+            }
+            lucide.createIcons();
+        });
 
-class HeartParticle {
-  constructor() {
-    this.reset();
-  }
-  reset() {
-    this.x = Math.random() * canvas.width;
-    this.y = canvas.height + 20;
-    this.size = Math.random() * 12 + 6;
-    this.speedY = -(Math.random() * 0.8 + 0.3);
-    this.speedX = (Math.random() - 0.5) * 0.5;
-    this.opacity = Math.random() * 0.4 + 0.1;
-    this.rotation = Math.random() * 360;
-    this.rotSpeed = (Math.random() - 0.5) * 2;
-    this.hue = Math.random() * 40 + 330; // pink-red range
-  }
-  update() {
-    this.y += this.speedY;
-    this.x += this.speedX + Math.sin(this.y * 0.01) * 0.3;
-    this.rotation += this.rotSpeed;
-    if (this.y < -20) this.reset();
-  }
-  draw() {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.rotation * Math.PI / 180);
-    ctx.globalAlpha = this.opacity;
-    ctx.fillStyle = `hsla(${this.hue}, 80%, 70%, 1)`;
-    ctx.beginPath();
-    const s = this.size / 15;
-    ctx.moveTo(0, -2 * s);
-    ctx.bezierCurveTo(-5 * s, -8 * s, -12 * s, -3 * s, 0, 6 * s);
-    ctx.moveTo(0, -2 * s);
-    ctx.bezierCurveTo(5 * s, -8 * s, 12 * s, -3 * s, 0, 6 * s);
-    ctx.fill();
-    ctx.restore();
-  }
-}
+        // 恋爱时光计时器
+        // 提示：可以在下面修改你们的相识/相恋起点时间（格式格式：YYYY-MM-DDTHH:mm:ss）
+        const startDate = new Date('2023-10-26T20:15:00');
 
-function initParticles() {
-  for (let i = 0; i < 25; i++) {
-    const p = new HeartParticle();
-    p.y = Math.random() * canvas.height;
-    particles.push(p);
-  }
-}
+        function updateLoveTimer() {
+            const now = new Date();
+            const diff = now - startDate;
 
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => { p.update(); p.draw(); });
-  requestAnimationFrame(animateParticles);
-}
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
 
-// ========== 花瓣下落 ==========
-function createPetal() {
-  if (!animationStarted) return;
-  const petal = document.createElement('div');
-  petal.className = 'petal';
-  petal.innerHTML = ['🌸', '💮', '🏵️', '✿'][Math.floor(Math.random() * 4)];
-  const startX = Math.random() * window.innerWidth;
-  const duration = 6 + Math.random() * 6;
-  const size = 0.6 + Math.random() * 0.8;
-  petal.style.cssText = `
-    left: ${startX}px; top: -30px;
-    font-size: ${20 * size}px;
-    opacity: 0;
-    animation: petalFall ${duration}s linear forwards;
-  `;
-  document.body.appendChild(petal);
-  setTimeout(() => petal.remove(), duration * 1000);
-}
+            document.getElementById('days').innerText = String(d).padStart(2, '0');
+            document.getElementById('hours').innerText = String(h).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(m).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(s).padStart(2, '0');
+        }
+        setInterval(updateLoveTimer, 1000);
+        updateLoveTimer();
 
-// 动态注入花瓣动画关键帧
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  @keyframes petalFall {
-    0% { opacity: 0; transform: translateY(0) rotate(0deg) translateX(0); }
-    10% { opacity: 0.7; }
-    90% { opacity: 0.5; }
-    100% { opacity: 0; transform: translateY(${window.innerHeight + 50}px) rotate(720deg) translateX(${(Math.random()-0.5)*200}px); }
-  }
-`;
-document.head.appendChild(styleSheet);
+        // 动态粒子背景 (Canvas)
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
 
-setInterval(createPetal, 800);
+        let particles = [];
 
-// ========== Web Audio 背景音乐 ==========
-let audioCtx = null;
-let musicPlaying = false;
-let musicGain = null;
-let musicInterval = null;
+        // 粒子基类
+        class Particle {
+            constructor(type) {
+                this.type = type; // 'heart' or 'sakura'
+                this.reset();
+                this.y = Math.random() * canvas.height; // 随机初始高度
+            }
 
-const MELODY_NOTES = [
-  // 简单柔和的旋律 (频率, 持续时间, 延迟)
-  { freq: 523.25, dur: 0.8, delay: 0 },     // C5
-  { freq: 659.25, dur: 0.6, delay: 0.9 },   // E5
-  { freq: 783.99, dur: 0.8, delay: 1.6 },   // G5
-  { freq: 698.46, dur: 0.6, delay: 2.5 },   // F5
-  { freq: 659.25, dur: 1.0, delay: 3.2 },   // E5
-  { freq: 523.25, dur: 0.6, delay: 4.3 },   // C5
-  { freq: 587.33, dur: 0.8, delay: 5.0 },   // D5
-  { freq: 523.25, dur: 1.2, delay: 5.9 },   // C5
-  { freq: 493.88, dur: 0.6, delay: 7.2 },   // B4
-  { freq: 440.00, dur: 0.8, delay: 7.9 },   // A4
-  { freq: 523.25, dur: 0.6, delay: 8.8 },   // C5
-  { freq: 493.88, dur: 0.8, delay: 9.5 },   // B4
-  { freq: 440.00, dur: 1.2, delay: 10.4 },  // A4
-  { freq: 392.00, dur: 0.6, delay: 11.7 },  // G4
-  { freq: 440.00, dur: 0.8, delay: 12.4 },  // A4
-  { freq: 523.25, dur: 1.5, delay: 13.3 },  // C5
-];
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 20;
+                this.size = Math.random() * 15 + 8;
+                this.speedY = -(Math.random() * 1.5 + 0.5);
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.opacity = Math.random() * 0.5 + 0.2;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = Math.random() * 0.02 - 0.01;
+            }
 
-const BASS_NOTES = [
-  { freq: 130.81, dur: 2.0, delay: 0 },     // C3
-  { freq: 164.81, dur: 2.0, delay: 2.5 },   // E3
-  { freq: 174.61, dur: 2.0, delay: 5.0 },   // F3
-  { freq: 130.81, dur: 2.0, delay: 7.5 },   // C3
-  { freq: 110.00, dur: 2.0, delay: 10.0 },  // A2
-  { freq: 130.81, dur: 3.0, delay: 12.5 },  // C3
-];
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
 
-function playNote(freq, duration, startTime, type = 'sine', vol = 0.08) {
-  if (!audioCtx || !musicGain) return;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, startTime);
-  gain.gain.setValueAtTime(0, startTime);
-  gain.gain.linearRampToValueAtTime(vol, startTime + 0.08);
-  gain.gain.setValueAtTime(vol, startTime + duration - 0.15);
-  gain.gain.linearRampToValueAtTime(0, startTime + duration);
-  osc.connect(gain);
-  gain.connect(musicGain);
-  osc.start(startTime);
-  osc.stop(startTime + duration);
-}
+                // 边缘重置
+                if (this.y < -20 || this.x < -20 || this.x > canvas.width + 20) {
+                    this.reset();
+                }
+            }
 
-function playMelodyCycle() {
-  if (!audioCtx || !musicPlaying) return;
-  const now = audioCtx.currentTime;
-  MELODY_NOTES.forEach(n => playNote(n.freq, n.dur, now + n.delay, 'sine', 0.06));
-  MELODY_NOTES.forEach(n => playNote(n.freq * 2, n.dur, now + n.delay, 'sine', 0.015));
-  BASS_NOTES.forEach(n => playNote(n.freq, n.dur, now + n.delay, 'triangle', 0.04));
-}
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation);
+                ctx.globalAlpha = this.opacity;
 
-function startMusic() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    musicGain = audioCtx.createGain();
-    musicGain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-    musicGain.connect(audioCtx.destination);
-  }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  musicPlaying = true;
-  playMelodyCycle();
-  musicInterval = setInterval(() => {
-    if (musicPlaying) playMelodyCycle();
-  }, 15000);
-  document.getElementById('musicBtn').classList.add('playing');
-  document.getElementById('musicBtn').textContent = '♫';
-}
+                if (this.type === 'heart') {
+                    // 绘制心形
+                    ctx.fillStyle = '#f43f5e';
+                    ctx.beginPath();
+                    const scale = this.size / 24;
+                    ctx.scale(scale, scale);
+                    ctx.translate(-12, -12); // 将中心点移至0,0
+                    
+                    // 极简心形画法，避免解析复杂path的开销
+                    ctx.moveTo(12, 5);
+                    ctx.bezierCurveTo(12, 4, 11, 2, 8.5, 2, 5.5, 2, 4, 4.5, 4, 7.5, 4, 11.5, 9, 15.5, 12, 19, 15, 15.5, 20, 11.5, 20, 7.5, 20, 4.5, 18.5, 2, 15.5, 2, 13, 2, 12, 4, 12, 5);
+                    ctx.fill();
+                } else {
+                    // 绘制樱花瓣 (Sakura)
+                    ctx.fillStyle = '#fbcfe8';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size * 0.6, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // 花瓣中央脉络线
+                    ctx.strokeStyle = '#f472b6';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(-this.size, 0);
+                    ctx.lineTo(this.size * 0.4, 0);
+                    ctx.stroke();
+                }
 
-function stopMusic() {
-  musicPlaying = false;
-  if (musicInterval) clearInterval(musicInterval);
-  if (musicGain) musicGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
-  document.getElementById('musicBtn').classList.remove('playing');
-  document.getElementById('musicBtn').textContent = '♪';
-}
+                ctx.restore();
+            }
+        }
 
-function toggleMusic() {
-  musicPlaying ? stopMusic() : startMusic();
-}
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // 根据屏幕大小设定粒子总数
+            const pCount = Math.min(60, Math.floor((canvas.width * canvas.height) / 20000));
+            particles = [];
+            for (let i = 0; i < pCount; i++) {
+                particles.push(new Particle(Math.random() > 0.5 ? 'heart' : 'sakura'));
+            }
+        }
 
-// ========== 进入网站 ==========
-function enterSite() {
-  const cover = document.getElementById('cover');
-  const main = document.getElementById('mainContent');
-  cover.style.transition = 'opacity 1.5s, transform 1.5s';
-  cover.style.opacity = '0';
-  cover.style.transform = 'scale(1.1)';
-  setTimeout(() => {
-    cover.style.display = 'none';
-    main.style.display = 'block';
-    animationStarted = true;
-    initParticles();
-    animateParticles();
-    startMusic();
-    // 开始自动滚动
-    setTimeout(() => {
-      document.getElementById('scrollHint').classList.add('show');
-      startAutoScroll();
-    }, 1000);
-    // 触发首个卡片动画
-    checkReveal();
-  }, 1500);
-}
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制粒子
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
 
-// ========== 自动缓慢滚动 ==========
-let autoScrolling = true;
-let scrollSpeed = 1.2;
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        animate();
 
-function startAutoScroll() {
-  let lastTime = performance.now();
-  function scroll(currentTime) {
-    if (!autoScrolling) {
-      lastTime = currentTime;
-      requestAnimationFrame(scroll);
-      return;
-    }
-    const delta = currentTime - lastTime;
-    lastTime = currentTime;
-    window.scrollBy(0, scrollSpeed * (delta / 16));
-    // 到底部停止
-    if ((window.innerHeight + window.scrollY) >= document.body.scrollHeight - 10) {
-      autoScrolling = false;
-      document.getElementById('scrollHint').classList.remove('show');
-      return;
-    }
-    requestAnimationFrame(scroll);
-  }
-  requestAnimationFrame(scroll);
-}
+        // 滚动触发渐显动效 (IntersectionObserver)
+        const revealElements = document.querySelectorAll('.scroll-reveal');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // 如果是特定章节，触发一波局部 Confetti 特效
+                    if (entry.target.id === 'timer-section' && !entry.target.dataset.fired) {
+                        entry.target.dataset.fired = "true";
+                        confetti({
+                            particleCount: 80,
+                            angle: 60,
+                            spread: 55,
+                            origin: { x: 0 }
+                        });
+                        confetti({
+                            particleCount: 80,
+                            angle: 120,
+                            spread: 55,
+                            origin: { x: 1 }
+                        });
+                    }
+                }
+            });
+        }, {
+            threshold: 0.15
+        });
 
-// 用户手动滚动时暂停自动滚动，3秒后恢复
-let scrollTimeout;
-window.addEventListener('wheel', () => {
-  autoScrolling = false;
-  clearTimeout(scrollTimeout);
-  scrollTimeout = setTimeout(() => { autoScrolling = true; }, 3000);
-}, { passive: true });
-
-window.addEventListener('touchmove', () => {
-  autoScrolling = false;
-  clearTimeout(scrollTimeout);
-  scrollTimeout = setTimeout(() => { autoScrolling = true; }, 3000);
-}, { passive: true });
-
-// ========== 滚动显示动画 ==========
-function checkReveal() {
-  const elements = document.querySelectorAll('[data-reveal]');
-  elements.forEach(el => {
-    const rect = el.getBoundingClientRect();
-    const windowH = window.innerHeight;
-    if (rect.top < windowH * 0.85) {
-      el.classList.add('visible');
-    }
-  });
-}
-
-window.addEventListener('scroll', () => {
-  checkReveal();
-  // 更新进度条
-  const scrollTop = window.scrollY;
-  const docHeight = document.body.scrollHeight - window.innerHeight;
-  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-  document.getElementById('progress-bar').style.width = progress + '%';
-}, { passive: true });
-
-// ========== 鼠标跟随光晕 ==========
-document.addEventListener('mousemove', (e) => {
-  const glow = document.createElement('div');
-  glow.style.cssText = `
-    position: fixed;
-    left: ${e.clientX - 75}px;
-    top: ${e.clientY - 75}px;
-    width: 150px; height: 150px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,105,180,0.08) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 1s;
-  `;
-  document.body.appendChild(glow);
-  setTimeout(() => { glow.style.opacity = '0'; }, 100);
-  setTimeout(() => glow.remove(), 1100);
-});
-</script>
-
+        revealElements.forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
